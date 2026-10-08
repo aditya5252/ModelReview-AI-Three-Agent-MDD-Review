@@ -1,0 +1,17 @@
+# Create: conda env create -f environment.yml
+# Activate: conda activate model-review-agents
+# Install Ollama separately and pull llama3.2 before running the auditor.
+name: model-review-agents
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+  - pip
+  - ipython
+  - jupyterlab
+  - ipykernel
+  - pip:
+      - openai
+      - python-dotenv

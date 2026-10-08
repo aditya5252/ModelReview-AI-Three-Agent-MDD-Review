@@ -1,0 +1,18 @@
+Marketing Campaign Response Model Development Memo
+To: Marketing Analytics and Model Validation
+From: Model Development Team
+Date: 24 September 2026
+Subject: Illustrative XGBoost response model for a consumer lending email campaign
+Sample document. All populations, dates, results, and thresholds below are hypothetical and provided for demonstration.
+Purpose and intended use
+The model ranks eligible existing customers by predicted probability of responding to a personal lending email within 30 days of delivery. Campaign operations would use the score to prioritize contacts under existing eligibility, suppression, consent, and contact frequency rules. It does not determine credit eligibility, approval, or loan pricing.
+Data and target
+The illustrative development sample contains 480,000 customer campaign observations from January 2024 through December 2025; 4.8% have the response label. A response is a recorded application start within 30 days after email delivery. Inputs available before the send date include customer tenure, prior digital engagement, past campaign contact and response history, product holdings, and recency of account activity. Customer identifiers and post-send events are excluded. Split by customer and time: training through June 2025, validation July–September 2025, and out-of-time testing October–December 2025. Repeated observations from a customer remain within one split.
+Method and selection
+We train an XGBoost binary classifier with logistic objective, capped tree depth, row and column subsampling, and early stopping on validation log loss. Missing values follow documented feature rules. A regularized logistic regression is the benchmark. Hyperparameters are selected only on validation data; the out-of-time set is held back for final assessment. The score is calibrated on a separate validation fold if observed response rates materially diverge from predicted rates.
+Illustrative performance
+On the out-of-time set, XGBoost achieves AUC 0.74 versus 0.69 for logistic regression; the top decile captures 24% of observed responses and has 2.4× overall response lift. Brier score is 0.043. Performance is reviewed by customer tenure, product holdings, and contact history; any weak segment requires investigation before use. These figures are examples, not verified results.
+Deployment and monitoring
+Score only customers who pass campaign eligibility and suppression checks; retain model version, feature snapshot, score, and campaign decision for audit. Compare production feature distributions with development data monthly using PSI and missingness checks. Review AUC, top-decile lift, response rate, and calibration quarterly after labels mature; investigate material deterioration, data pipeline changes, or unexpected segment gaps. Retraining or threshold changes require documented review before release.
+Limitations and decision
+Historical targeting affects who received prior emails and therefore whose outcomes are observed; the model estimates response under the historical campaign process, not incremental treatment effect. Changes in offer, channel, or population may invalidate performance. Proposed status: development example only; production use would require reproducible training evidence, leakage and bias review, implementation testing, approved controls, and independent validation.
